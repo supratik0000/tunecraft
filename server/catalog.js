@@ -25,6 +25,22 @@ export const CATALOG = [
   { id:'18', name:'Chill Pill',         artist:'Soft Focus',       album:'Easy Now',       genre:'pop',        emoji:'💊', color:'c2',  bpm:95,  music_key:'D',  mood:'calm'       },
   { id:'19', name:'Forest Walk',        artist:'Acoustic Lane',    album:'Trails',         genre:'folk',       emoji:'🌲', color:'c7',  bpm:78,  music_key:'A',  mood:'calm'       },
   { id:'20', name:'Turbo Charged',      artist:'8-Bit Ocean',      album:'Level Up',       genre:'electronic', emoji:'🏎', color:'c1',  bpm:160, music_key:'Cm', mood:'energetic'  },
+
+  // ── Hindi (Bollywood-style) — original titles & artists ──
+  { id:'21', name:'साँझ की धुन',   artist:'Raagmala',        album:'Shaam-e-Mehfil', genre:'bollywood', emoji:'🌆', color:'c8',  bpm:92,  music_key:'Dm', mood:'smooth'     },
+  { id:'22', name:'चाँद सी रात',    artist:'Sur Sangam',      album:'Chandni',        genre:'bollywood', emoji:'🌙', color:'c4',  bpm:78,  music_key:'Am', mood:'calm'       },
+  { id:'23', name:'दिल का रास्ता',  artist:'Dhun Collective', album:'Safar',          genre:'bollywood', emoji:'❤️', color:'c10', bpm:104, music_key:'G',  mood:'smooth'     },
+  { id:'24', name:'बरसात के गीत',   artist:'Megh Malhar',     album:'Saawan',         genre:'bollywood', emoji:'🌧', color:'c9',  bpm:88,  music_key:'Cm', mood:'melancholy' },
+  { id:'25', name:'सपनों की उड़ान',  artist:'Indie Bazaar',    album:'Khwaab',         genre:'bollywood', emoji:'✨', color:'c2',  bpm:120, music_key:'F',  mood:'energetic'  },
+  { id:'26', name:'मौसम बदले',      artist:'Saaz Aur Awaaz',  album:'Ritu',           genre:'bollywood', emoji:'🍃', color:'c7',  bpm:100, music_key:'D',  mood:'playful'    },
+
+  // ── Bengali — original titles & artists ──
+  { id:'27', name:'মেঘের গান',      artist:'Megh Bela',       album:'Borsha',         genre:'bengali',   emoji:'☁️', color:'c9',  bpm:82,  music_key:'Cm', mood:'calm'       },
+  { id:'28', name:'বৃষ্টি ভেজা',     artist:'Nodi O Surjo',    album:'Aakaash',        genre:'bengali',   emoji:'🌧', color:'c3',  bpm:90,  music_key:'Am', mood:'melancholy' },
+  { id:'29', name:'নদীর পারে',      artist:'Surolok',         album:'Bhatiyali',      genre:'bengali',   emoji:'🛶', color:'c5',  bpm:76,  music_key:'G',  mood:'calm'       },
+  { id:'30', name:'সন্ধ্যা তারা',    artist:'Ektara Ensemble', album:'Gosthi',         genre:'bengali',   emoji:'🌟', color:'c1',  bpm:96,  music_key:'Em', mood:'smooth'     },
+  { id:'31', name:'সোনালি বিকেল',   artist:'Kolkata Sound',   album:'Bikel',          genre:'bengali',   emoji:'🌅', color:'c8',  bpm:108, music_key:'D',  mood:'playful'    },
+  { id:'32', name:'মন কেমনের গান',  artist:'Baul Bandhan',    album:'Maati',          genre:'bengali',   emoji:'🪕', color:'c6',  bpm:84,  music_key:'Dm', mood:'melancholy' },
 ];
 
 // Deterministic duration (seconds), same formula the original app used.

@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────
 import { db } from './db.js';
 
-const GENRES = ['pop', 'rock', 'electronic', 'ambient', 'hiphop', 'jazz', 'classical', 'folk'];
+const GENRES = ['pop', 'rock', 'electronic', 'ambient', 'hiphop', 'jazz', 'classical', 'folk', 'bollywood', 'bengali'];
 const COLORS = ['c1','c2','c3','c4','c5','c6','c7','c8','c9','c10'];
 const MOODS  = ['energetic', 'calm', 'smooth', 'playful', 'melancholy'];
 const KEYS   = ['Am','Cm','Em','Dm','Gm','Bm','Fm','C','D','E','F','G','A','Bb'];
