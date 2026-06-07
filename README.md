@@ -22,6 +22,7 @@ A personal, **self-contained music player** inspired by Spotify's layout — but
 | **Accounts** | Email + password sign-up / login. Passwords hashed with bcrypt, sessions via JWT. |
 | **Playlists** | Create, rename, delete, add/remove tracks — saved per user on the server. |
 | **Liked songs** | Synced to your account (not just the browser). |
+| **Real audio** | Plays actual royalty-free instrumental tracks (with a Web Audio synthesizer as fallback). |
 | **Track library** | Served by the API; you (or the AI) can add new tracks. |
 | **Album art** | Upload custom artwork for any track (click the artwork in the player bar). |
 | **AI assistant** | "Make a playlist called Road Trip and add Turbo Charged" → it actually does it. Runs on a **free** LLM provider. |
@@ -61,10 +62,16 @@ You need **Node.js 22.5+** (uses the built-in `node:sqlite`). You have v24 — g
 cd server
 npm install
 cp .env.example .env      # Windows PowerShell:  Copy-Item .env.example .env
+npm run fetch-audio       # downloads the royalty-free songs into public/audio/
 npm start
 ```
 
 Then open **http://localhost:4000**.
+
+> **Audio files** are not committed to git (they're ~65 MB). `npm run fetch-audio`
+> downloads them. They're [SoundHelix](https://www.soundhelix.com/) demo songs —
+> algorithmically generated and free to use, so nothing is copyrighted. Tracks without
+> an audio file automatically fall back to the built-in Web Audio synthesizer.
 
 A demo account already exists if you want to skip sign-up:
 `test@example.com` / `secret123`. (Delete `server/data/app.db` any time to start fresh.)

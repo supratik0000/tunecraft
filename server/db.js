@@ -90,6 +90,7 @@ function ensureColumn(table, column, definition) {
     db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
   }
 }
-ensureColumn('tracks', 'art', 'TEXT'); // custom album-art URL (uploaded image)
+ensureColumn('tracks', 'art', 'TEXT');   // custom album-art URL (uploaded image)
+ensureColumn('tracks', 'audio', 'TEXT'); // audio file URL (real music); NULL = use synthesizer
 
 export default db;

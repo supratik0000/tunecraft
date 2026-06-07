@@ -45,3 +45,12 @@ export const CATALOG = [
 
 // Deterministic duration (seconds), same formula the original app used.
 for (const t of CATALOG) t.duration = 120 + (parseInt(t.id, 10) * 37) % 120;
+
+// Real, royalty-free instrumental audio (SoundHelix demo songs, free to use),
+// downloaded into public/audio/. Each track is assigned one so it actually
+// plays music. Tracks without a file fall back to the Web Audio synthesizer.
+const AUDIO_FILES = [
+  '/audio/song1.mp3', '/audio/song2.mp3', '/audio/song3.mp3', '/audio/song4.mp3',
+  '/audio/song5.mp3', '/audio/song6.mp3', '/audio/song7.mp3', '/audio/song8.mp3',
+];
+CATALOG.forEach((t, i) => { t.audio = AUDIO_FILES[i % AUDIO_FILES.length]; });

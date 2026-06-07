@@ -11,6 +11,9 @@ server/data/*.db
 server/data/*.db-*
 server/data/uploads/
 
+# Downloaded audio (re-fetch with: npm run fetch-audio)
+public/audio/*.mp3
+
 # Logs
 *.log
 npm-debug.log*

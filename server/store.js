@@ -9,6 +9,7 @@ const GENRES = ['pop', 'rock', 'electronic', 'ambient', 'hiphop', 'jazz', 'class
 const COLORS = ['c1','c2','c3','c4','c5','c6','c7','c8','c9','c10'];
 const MOODS  = ['energetic', 'calm', 'smooth', 'playful', 'melancholy'];
 const KEYS   = ['Am','Cm','Em','Dm','Gm','Bm','Fm','C','D','E','F','G','A','Bb'];
+const AUDIO  = ['/audio/song1.mp3','/audio/song2.mp3','/audio/song3.mp3','/audio/song4.mp3','/audio/song5.mp3','/audio/song6.mp3','/audio/song7.mp3','/audio/song8.mp3'];
 
 // Deterministic-ish picker so AI-added tracks get sensible varied defaults
 // without needing the caller to specify everything.
@@ -52,11 +53,12 @@ export function addTrack(input, ownerId = null) {
     mood: MOODS.includes(input.mood) ? input.mood : pick(MOODS, album),
     duration: Number.isFinite(+input.duration) ? +input.duration : 120 + (name.length * 17) % 120,
     art: input.art ? String(input.art) : null,
+    audio: input.audio ? String(input.audio) : pick(AUDIO, name + artist),
     owner_id: ownerId,
   };
 
-  db.prepare(`INSERT INTO tracks (id,name,artist,album,genre,emoji,color,bpm,music_key,mood,duration,art,owner_id)
-    VALUES (@id,@name,@artist,@album,@genre,@emoji,@color,@bpm,@music_key,@mood,@duration,@art,@owner_id)`).run(track);
+  db.prepare(`INSERT INTO tracks (id,name,artist,album,genre,emoji,color,bpm,music_key,mood,duration,art,audio,owner_id)
+    VALUES (@id,@name,@artist,@album,@genre,@emoji,@color,@bpm,@music_key,@mood,@duration,@art,@audio,@owner_id)`).run(track);
   return track;
 }
 

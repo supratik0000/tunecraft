@@ -1,4 +1,4 @@
-import { Synth } from './synth.js';
+import { Player } from './player.js';
 
 // ═══════════════════════════════════════════════════
 //  API CLIENT
@@ -24,7 +24,7 @@ async function api(path, { method = 'GET', body } = {}) {
 // ═══════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════
-const synth = new Synth();
+const player = new Player();
 let user = null;
 let tracks = [];                 // all tracks
 let trackById = new Map();
@@ -97,7 +97,7 @@ $('auth-form').addEventListener('submit', async (e) => {
 
 function signOut() {
   token = null; user = null; localStorage.removeItem(TOKEN_KEY);
-  synth.stop();
+  player.stop();
   $('usermenu').classList.add('hidden');
   showAuth();
 }
@@ -365,8 +365,8 @@ function playQueue(list, idx) { queue = list.slice(); qIdx = idx; play(queue[qId
 function play(t) {
   if (!t) return;
   qIdx = queue.findIndex((x) => String(x.id) === String(t.id));
-  synth.load(t); synth.play();
-  synth.setVolume(parseFloat($('vf').style.width) / 100 || 0.7);
+  player.load(t); player.play();
+  player.setVolume(parseFloat($('vf').style.width) / 100 || 0.7);
   $('ntitle').textContent = t.name;
   $('nartist').textContent = t.artist;
   const na = $('na'); na.className = `na ${t.color}`;
@@ -376,13 +376,13 @@ function play(t) {
   highlightPlaying();
 }
 
-synth.ontime = (cur, dur) => {
+player.ontime = (cur, dur) => {
   if (dragging) return;
   $('pfill').style.width = (cur/dur*100) + '%';
   $('tcur').textContent = fmt(cur);
   $('ttot').textContent = fmt(dur);
 };
-synth.onended = () => { repeated ? synth.play() : goNext(); };
+player.onended = () => { repeated ? player.play() : goNext(); };
 
 function goNext() {
   if (!queue.length) return;
@@ -391,7 +391,7 @@ function goNext() {
 }
 function goPrev() {
   if (!queue.length) return;
-  if (synth.currentTime > 3) { synth.seek(0); return; }
+  if (player.currentTime > 3) { player.seek(0); return; }
   qIdx = (qIdx-1+queue.length) % queue.length;
   play(queue[qIdx]);
 }
@@ -420,9 +420,9 @@ function syncNowHeart() {
 }
 
 $('playb').addEventListener('click', () => {
-  if (!synth.track) { toast('Pick a track first!'); return; }
-  if (synth.isPlaying) { synth.pause(); $('picon').innerHTML = '<polygon points="5,3 19,12 5,21"/>'; }
-  else { synth.play(); $('picon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
+  if (!player.track) { toast('Pick a track first!'); return; }
+  if (player.isPlaying) { player.pause(); $('picon').innerHTML = '<polygon points="5,3 19,12 5,21"/>'; }
+  else { player.play(); $('picon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
 });
 $('nextb').addEventListener('click', goNext);
 $('prevb').addEventListener('click', goPrev);
@@ -465,21 +465,21 @@ function doScrub(e) {
   const r = $('ptrack').getBoundingClientRect();
   const p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
   $('pfill').style.width = (p*100) + '%';
-  synth.seek(p);
+  player.seek(p);
 }
 $('vt').addEventListener('click', (e) => {
   const r = $('vt').getBoundingClientRect();
   const p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-  $('vf').style.width = (p*100) + '%'; synth.setVolume(p);
+  $('vf').style.width = (p*100) + '%'; player.setVolume(p);
 });
 let muted = false, prevV = 0.7;
-$('vbtn').addEventListener('click', () => { muted = !muted; synth.setVolume(muted ? 0 : prevV); $('vf').style.width = (muted ? 0 : prevV*100) + '%'; });
+$('vbtn').addEventListener('click', () => { muted = !muted; player.setVolume(muted ? 0 : prevV); $('vf').style.width = (muted ? 0 : prevV*100) + '%'; });
 
 document.addEventListener('keydown', (e) => {
   if (['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
   if (e.code === 'Space') { e.preventDefault(); $('playb').click(); }
-  if (e.code === 'ArrowRight') synth.seek(Math.min(1, (synth.currentTime+10)/synth.duration));
-  if (e.code === 'ArrowLeft')  synth.seek(Math.max(0, (synth.currentTime-10)/synth.duration));
+  if (e.code === 'ArrowRight') player.seek(Math.min(1, (player.currentTime+10)/player.duration));
+  if (e.code === 'ArrowLeft')  player.seek(Math.max(0, (player.currentTime-10)/player.duration));
 });
 
 // ── Waveform visualizer ──
@@ -488,11 +488,11 @@ for (let i = 0; i < 30; i++) { const b = document.createElement('div'); b.classN
 const vizBars = vizEl.querySelectorAll('.viz-bar');
 function animateViz() {
   requestAnimationFrame(animateViz);
-  const data = synth.getWaveform();
+  const data = player.getWaveform();
   vizBars.forEach((b, i) => {
     const v = data[i] || 0;
-    b.style.height = (synth.isPlaying ? Math.max(4, v/255*52) : 4) + 'px';
-    b.style.opacity = synth.isPlaying ? '0.8' : '0.3';
+    b.style.height = (player.isPlaying ? Math.max(4, v/255*52) : 4) + 'px';
+    b.style.opacity = player.isPlaying ? '0.8' : '0.3';
   });
 }
 animateViz();
