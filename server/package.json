@@ -1,0 +1,25 @@
+{
+  "name": "tunecraft-server",
+  "version": "1.0.0",
+  "description": "Backend API for Tunecraft — a self-contained music player (auth, playlists, likes, AI agent).",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch index.js",
+    "seed": "node --disable-warning=ExperimentalWarning seed.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "openai": "^6.42.0"
+  }
+}
