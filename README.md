@@ -23,7 +23,8 @@ A personal, **self-contained music player** inspired by Spotify's layout — but
 | **Playlists** | Create, rename, delete, add/remove tracks — saved per user on the server. |
 | **Liked songs** | Synced to your account (not just the browser). |
 | **Track library** | Served by the API; you (or the AI) can add new tracks. |
-| **AI assistant** | "Make a playlist called Road Trip and add Turbo Charged" → it actually does it. |
+| **Album art** | Upload custom artwork for any track (click the artwork in the player bar). |
+| **AI assistant** | "Make a playlist called Road Trip and add Turbo Charged" → it actually does it. Runs on a **free** LLM provider. |
 | **Player** | Play/pause, next/prev, shuffle, repeat, seek, volume, live waveform, keyboard shortcuts. |
 
 ---
@@ -70,18 +71,35 @@ A demo account already exists if you want to skip sign-up:
 
 ---
 
-## Enabling the AI assistant
+## Enabling the AI assistant (free)
 
-The assistant is fully built but needs a Claude API key:
+The assistant is fully built but needs an API key. It's **provider-agnostic** and defaults to
+**Groq**, which is free and fast. Steps:
 
-1. Get a key from <https://console.anthropic.com/>.
+1. Create a free key at <https://console.groq.com/keys> (no credit card).
 2. Put it in `server/.env`:
    ```
-   ANTHROPIC_API_KEY=sk-ant-...
+   AI_PROVIDER=groq
+   GROQ_API_KEY=gsk_...
    ```
-3. Restart the server. The "Ask AI" panel will now perform real actions.
+3. Restart the server. The "Ask AI" panel now performs real actions.
 
-Without a key everything else works; the AI panel just shows a "not configured" notice.
+### Other free / local options
+
+Set `AI_PROVIDER` and the matching key in `server/.env`:
+
+| Provider | `AI_PROVIDER` | Key variable | Where / cost |
+|---|---|---|---|
+| **Groq** (default) | `groq` | `GROQ_API_KEY` | <https://console.groq.com/keys> — free |
+| Google Gemini | `gemini` | `GEMINI_API_KEY` | <https://aistudio.google.com/apikey> — free tier |
+| OpenRouter | `openrouter` | `OPENROUTER_API_KEY` | <https://openrouter.ai/keys> — has free models |
+| Ollama (local) | `ollama` | *(none)* | <https://ollama.com> — runs on your PC, no key |
+| OpenAI | `openai` | `OPENAI_API_KEY` | paid |
+| Anthropic | `anthropic` | `ANTHROPIC_API_KEY` | paid |
+
+Override the model with `AI_MODEL=...`, or point at any OpenAI-compatible endpoint with
+`AI_BASE_URL=...`. Without a key everything else works; the AI panel just shows a
+"not configured" notice.
 
 The assistant can only do what *you* could do in the UI — every tool it calls maps to the
 same per-user functions in `store.js`.
@@ -97,6 +115,7 @@ same per-user functions in `store.js`.
 | `GET  /api/auth/me` | ✓ | Current user |
 | `GET  /api/tracks` | – | List all tracks |
 | `POST /api/tracks` | ✓ | Add a track |
+| `POST /api/tracks/:id/art` | ✓ | Upload album art `{ dataUrl }` |
 | `GET  /api/likes` | ✓ | Liked track ids |
 | `PUT  /api/likes/:trackId` | ✓ | `{ liked: true|false }` |
 | `GET  /api/playlists` | ✓ | List playlists with track ids |
