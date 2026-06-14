@@ -1,9 +1,7 @@
-// ─────────────────────────────────────────────────────────────
-//  Built-in track catalog.
-//  These are NOT real songs — the frontend synthesizes audio from
-//  the bpm / key / mood / genre fields using the Web Audio API,
-//  so there is nothing to license or infringe.
-// ─────────────────────────────────────────────────────────────
+// Built-in starter catalog. These titles, artists and albums are original.
+// The frontend plays a small set of royalty-free SoundHelix MP3s and falls
+// back to its Web Audio synthesizer when no file is present, so nothing
+// in here is licensed material.
 export const CATALOG = [
   { id:'1',  name:'Neon Dreams',        artist:'Synthwave Studio', album:'Retro Future',   genre:'electronic', emoji:'🌆', color:'c1',  bpm:128, music_key:'Am', mood:'energetic'  },
   { id:'2',  name:'Midnight Bloom',     artist:'Luna Waves',       album:'Night Garden',   genre:'ambient',    emoji:'🌸', color:'c5',  bpm:72,  music_key:'Cm', mood:'calm'       },
@@ -26,29 +24,23 @@ export const CATALOG = [
   { id:'19', name:'Forest Walk',        artist:'Acoustic Lane',    album:'Trails',         genre:'folk',       emoji:'🌲', color:'c7',  bpm:78,  music_key:'A',  mood:'calm'       },
   { id:'20', name:'Turbo Charged',      artist:'8-Bit Ocean',      album:'Level Up',       genre:'electronic', emoji:'🏎', color:'c1',  bpm:160, music_key:'Cm', mood:'energetic'  },
 
-  // ── Hindi (Bollywood-style) — original titles & artists ──
-  { id:'21', name:'Saanjh Ki Dhun',  artist:'Raagmala',        album:'Shaam-e-Mehfil', genre:'bollywood', emoji:'🌆', color:'c8',  bpm:92,  music_key:'Dm', mood:'smooth'     },
-  { id:'22', name:'Chaand Si Raat',  artist:'Sur Sangam',      album:'Chandni',        genre:'bollywood', emoji:'🌙', color:'c4',  bpm:78,  music_key:'Am', mood:'calm'       },
-  { id:'23', name:'Dil Ka Rasta',    artist:'Dhun Collective', album:'Safar',          genre:'bollywood', emoji:'❤️', color:'c10', bpm:104, music_key:'G',  mood:'smooth'     },
-  { id:'24', name:'Barsaat Ke Geet', artist:'Megh Malhar',     album:'Saawan',         genre:'bollywood', emoji:'🌧', color:'c9',  bpm:88,  music_key:'Cm', mood:'melancholy' },
-  { id:'25', name:'Sapno Ki Udaan',  artist:'Indie Bazaar',    album:'Khwaab',         genre:'bollywood', emoji:'✨', color:'c2',  bpm:120, music_key:'F',  mood:'energetic'  },
-  { id:'26', name:'Mausam Badle',    artist:'Saaz Aur Awaaz',  album:'Ritu',           genre:'bollywood', emoji:'🍃', color:'c7',  bpm:100, music_key:'D',  mood:'playful'    },
+  { id:'21', name:'Saanjh Ki Dhun',    artist:'Raagmala',        album:'Shaam-e-Mehfil', genre:'bollywood', emoji:'🌆', color:'c8',  bpm:92,  music_key:'Dm', mood:'smooth'     },
+  { id:'22', name:'Chaand Si Raat',    artist:'Sur Sangam',      album:'Chandni',        genre:'bollywood', emoji:'🌙', color:'c4',  bpm:78,  music_key:'Am', mood:'calm'       },
+  { id:'23', name:'Dil Ka Rasta',      artist:'Dhun Collective', album:'Safar',          genre:'bollywood', emoji:'❤️', color:'c10', bpm:104, music_key:'G',  mood:'smooth'     },
+  { id:'24', name:'Barsaat Ke Geet',   artist:'Megh Malhar',     album:'Saawan',         genre:'bollywood', emoji:'🌧', color:'c9',  bpm:88,  music_key:'Cm', mood:'melancholy' },
+  { id:'25', name:'Sapno Ki Udaan',    artist:'Indie Bazaar',    album:'Khwaab',         genre:'bollywood', emoji:'✨', color:'c2',  bpm:120, music_key:'F',  mood:'energetic'  },
+  { id:'26', name:'Mausam Badle',      artist:'Saaz Aur Awaaz',  album:'Ritu',           genre:'bollywood', emoji:'🍃', color:'c7',  bpm:100, music_key:'D',  mood:'playful'    },
 
-  // ── Bengali — original titles & artists ──
-  { id:'27', name:'Megher Gaan',     artist:'Megh Bela',       album:'Borsha',         genre:'bengali',   emoji:'☁️', color:'c9',  bpm:82,  music_key:'Cm', mood:'calm'       },
-  { id:'28', name:'Brishti Bheja',   artist:'Nodi O Surjo',    album:'Aakaash',        genre:'bengali',   emoji:'🌧', color:'c3',  bpm:90,  music_key:'Am', mood:'melancholy' },
-  { id:'29', name:'Nodir Pare',      artist:'Surolok',         album:'Bhatiyali',      genre:'bengali',   emoji:'🛶', color:'c5',  bpm:76,  music_key:'G',  mood:'calm'       },
-  { id:'30', name:'Sondhya Tara',    artist:'Ektara Ensemble', album:'Gosthi',         genre:'bengali',   emoji:'🌟', color:'c1',  bpm:96,  music_key:'Em', mood:'smooth'     },
-  { id:'31', name:'Sonali Bikel',    artist:'Kolkata Sound',   album:'Bikel',          genre:'bengali',   emoji:'🌅', color:'c8',  bpm:108, music_key:'D',  mood:'playful'    },
-  { id:'32', name:'Mon Kemoner Gaan',artist:'Baul Bandhan',    album:'Maati',          genre:'bengali',   emoji:'🪕', color:'c6',  bpm:84,  music_key:'Dm', mood:'melancholy' },
+  { id:'27', name:'Megher Gaan',       artist:'Megh Bela',       album:'Borsha',         genre:'bengali',   emoji:'☁️', color:'c9',  bpm:82,  music_key:'Cm', mood:'calm'       },
+  { id:'28', name:'Brishti Bheja',     artist:'Nodi O Surjo',    album:'Aakaash',        genre:'bengali',   emoji:'🌧', color:'c3',  bpm:90,  music_key:'Am', mood:'melancholy' },
+  { id:'29', name:'Nodir Pare',        artist:'Surolok',         album:'Bhatiyali',      genre:'bengali',   emoji:'🛶', color:'c5',  bpm:76,  music_key:'G',  mood:'calm'       },
+  { id:'30', name:'Sondhya Tara',      artist:'Ektara Ensemble', album:'Gosthi',         genre:'bengali',   emoji:'🌟', color:'c1',  bpm:96,  music_key:'Em', mood:'smooth'     },
+  { id:'31', name:'Sonali Bikel',      artist:'Kolkata Sound',   album:'Bikel',          genre:'bengali',   emoji:'🌅', color:'c8',  bpm:108, music_key:'D',  mood:'playful'    },
+  { id:'32', name:'Mon Kemoner Gaan',  artist:'Baul Bandhan',    album:'Maati',          genre:'bengali',   emoji:'🪕', color:'c6',  bpm:84,  music_key:'Dm', mood:'melancholy' },
 ];
 
-// Deterministic duration (seconds), same formula the original app used.
 for (const t of CATALOG) t.duration = 120 + (parseInt(t.id, 10) * 37) % 120;
 
-// Real, royalty-free instrumental audio (SoundHelix demo songs, free to use),
-// downloaded into public/audio/. Each track is assigned one so it actually
-// plays music. Tracks without a file fall back to the Web Audio synthesizer.
 const AUDIO_FILES = [
   '/audio/song1.mp3', '/audio/song2.mp3', '/audio/song3.mp3', '/audio/song4.mp3',
   '/audio/song5.mp3', '/audio/song6.mp3', '/audio/song7.mp3', '/audio/song8.mp3',

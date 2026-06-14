@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node --disable-warning=ExperimentalWarning index.js",
     "dev": "node --disable-warning=ExperimentalWarning --watch index.js",
-    "seed": "node --disable-warning=ExperimentalWarning seed.js",
-    "fetch-audio": "node fetch-audio.mjs"
+    "seed": "node --disable-warning=ExperimentalWarning db/seed.js",
+    "fetch-audio": "node scripts/fetch-audio.mjs"
   },
   "engines": {
     "node": ">=22.5.0"

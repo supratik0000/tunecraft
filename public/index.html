@@ -4,11 +4,19 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Tunecraft — Music Player</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<!-- Custom equalizer-bars logo as favicon -->
+
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/player-bar.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/tracks.css">
+<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/ai-panel.css">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='9' width='3' height='11' rx='1.5' fill='%237c5cff'/%3E%3Crect x='10.5' y='4' width='3' height='16' rx='1.5' fill='%239b59ff'/%3E%3Crect x='17' y='12' width='3' height='8' rx='1.5' fill='%233ad7c8'/%3E%3C/svg%3E">
 </head>
 <body>
@@ -37,151 +45,165 @@
   </div>
 </div>
 
-<!-- ══ App ══ -->
+<!-- ══ App shell ══ -->
 <div class="app hidden" id="app">
 
-  <!-- Rail -->
-  <nav class="rail">
-    <div class="logo">
-      <svg viewBox="0 0 24 24"><rect x="4" y="9" width="3" height="11" rx="1.5" fill="#fff"/><rect x="10.5" y="4" width="3" height="16" rx="1.5" fill="#fff" opacity=".9"/><rect x="17" y="12" width="3" height="8" rx="1.5" fill="#fff" opacity=".75"/></svg>
+  <!-- Top brand bar -->
+  <header class="brandbar">
+    <button class="bb-lib" id="lib-toggle" title="Library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 6l4 1-3 14-4-1z"/></svg>
+    </button>
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 24 24"><rect x="4" y="9" width="3" height="11" rx="1.5" fill="#fff"/><rect x="10.5" y="4" width="3" height="16" rx="1.5" fill="#fff" opacity=".9"/><rect x="17" y="12" width="3" height="8" rx="1.5" fill="#fff" opacity=".75"/></svg>
+      <span class="brand-name">Tunecraft</span>
     </div>
-    <button class="nb on" id="nb-home"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></button>
-    <button class="nb" id="nb-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Search</span></button>
-    <button class="nb" id="nb-ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4z"/></svg><span>AI</span></button>
-    <div class="sp"></div>
-    <button class="av" id="avatar">U</button>
+    <nav class="bb-nav">
+      <button class="bb-tab on" data-nav="home">Home</button>
+      <button class="bb-tab"     data-nav="browse">Browse</button>
+      <button class="bb-tab"     data-nav="ai">Assistant</button>
+    </nav>
+    <div class="bb-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search songs, artists, albums…"/>
+    </div>
+    <button class="bb-avatar" id="avatar-btn">U</button>
     <div class="usermenu hidden" id="usermenu">
       <div class="um-name" id="um-name">User</div>
       <div class="um-mail" id="um-mail">user@example.com</div>
-      <button id="signout">Sign out</button>
+      <button id="signout-btn">Sign out</button>
     </div>
-  </nav>
+  </header>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sh"><h2>Library</h2><button id="new-pl-btn" title="New playlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button></div>
-    <div class="ss">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="sf" placeholder="Find in library…"/>
+  <!-- Top sticky player bar (a slim strip under the brand bar) -->
+  <div class="playerbar">
+    <div class="pb-art" id="pb-art" title="Click to set album art">
+      <span class="pb-art-emoji">🎵</span>
+      <span class="pb-art-cam">📷</span>
     </div>
-    <div class="slist" id="slist"></div>
+    <div class="pb-info">
+      <div class="pb-title" id="pb-title">No track playing</div>
+      <div class="pb-artist" id="pb-artist">Pick a song to start</div>
+    </div>
+    <div class="pb-controls">
+      <button class="pb-btn" id="pb-shuffle" title="Shuffle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+      <button class="pb-btn" id="pb-prev"    title="Previous"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button class="pb-play" id="pb-play"><svg id="pb-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button>
+      <button class="pb-btn" id="pb-next"    title="Next"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg></button>
+      <button class="pb-btn" id="pb-repeat"  title="Repeat"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
+    </div>
+    <div class="pb-progress">
+      <span class="pb-time" id="pb-cur">0:00</span>
+      <div class="pb-track" id="pb-track"><div class="pb-fill" id="pb-fill" style="width:0%"></div></div>
+      <span class="pb-time" id="pb-tot">0:00</span>
+    </div>
+    <div class="pb-extras">
+      <button class="pb-heart" id="pb-heart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <button class="pb-btn" id="pb-vol-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></button>
+      <div class="pb-vol-track" id="pb-vol-track"><div class="pb-vol-fill" id="pb-vol-fill" style="width:70%"></div></div>
+    </div>
+  </div>
+
+  <!-- Library drawer (left, slides in/out) -->
+  <aside class="libdrawer" id="libdrawer">
+    <div class="ld-head">
+      <h2>Your library</h2>
+      <button id="ld-new-btn" title="New playlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+    <div class="ld-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="ld-filter" placeholder="Find in library…"/>
+    </div>
+    <div class="ld-list" id="ld-list"></div>
   </aside>
 
-  <!-- Main -->
-  <main class="main" id="main">
-    <div class="topbar">
-      <div class="chips">
-        <button class="chip on" data-g="all">All</button>
-        <button class="chip" data-g="pop">Pop</button>
-        <button class="chip" data-g="electronic">Electronic</button>
-        <button class="chip" data-g="rock">Rock</button>
-        <button class="chip" data-g="bollywood">Bollywood</button>
-        <button class="chip" data-g="bengali">Bengali</button>
-        <button class="chip" data-g="ambient">Ambient</button>
-      </div>
-      <div class="grow"></div>
-      <button class="ai-open" id="ai-open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4z"/></svg>Ask AI</button>
-      <div class="tsearch">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="text" id="si" placeholder="Search songs, artists…"/>
-      </div>
-    </div>
-
-    <!-- Search results -->
-    <div id="search-sec" class="sec hidden" style="padding-top:32px">
-      <div class="sec-head"><h2 id="sh">Results</h2><button class="link" id="cs">✕ Clear</button></div>
-      <div id="sr" class="slist2"></div>
-    </div>
-
-    <!-- A generic "list view" (playlist / liked / genre) -->
-    <div id="list-view" class="hidden">
-      <div class="hero" style="padding-bottom:20px">
-        <div class="hero-bg"></div>
-        <div class="hero-label" id="lv-kind">Playlist</div>
-        <h1 id="lv-title">Title</h1>
-        <p class="hero-sub" id="lv-sub"></p>
-        <div class="hbtns">
-          <button class="bp" id="lv-play">▶ &nbsp;Play</button>
-          <button class="bs" id="lv-back">← Back to home</button>
-          <button class="bs hidden" id="lv-rename">Rename</button>
-          <button class="bs hidden" id="lv-delete">Delete</button>
-        </div>
-      </div>
-      <div class="sec"><div id="lv-list" class="slist2"></div></div>
-    </div>
+  <!-- Main content -->
+  <main class="content" id="content">
 
     <!-- Home -->
-    <div id="home-c">
+    <section id="view-home">
       <div class="hero">
         <div class="hero-bg"></div>
-        <div class="hero-label" id="greeting">Good evening</div>
+        <div class="hero-tag" id="hero-greet">Good evening</div>
         <h1>Your music,<br/><em>your way.</em></h1>
-        <p class="hero-sub">A self-contained player powered by Web Audio synthesis, with your own accounts, playlists, and an AI assistant — all running on your backend.</p>
-        <div class="hbtns">
-          <button class="bp" id="shuffle-btn2">▶ &nbsp;Shuffle play</button>
-          <button class="bs" id="browse-btn">Browse genres</button>
+        <p class="hero-sub">A self-contained player with browser-synthesised audio, your own playlists, and a built-in AI assistant. No streams, no logins to anyone else's service.</p>
+        <div class="hero-buttons">
+          <button class="btn-primary" id="hero-shuffle">▶ Shuffle play</button>
+          <button class="btn-ghost"   id="hero-browse">Browse genres</button>
         </div>
       </div>
 
-      <div class="viz-wrap" id="viz"><span class="viz-label">Waveform</span></div>
+      <div class="viz-strip" id="viz-strip"><span class="viz-strip-label">Live waveform</span></div>
 
-      <div class="sec">
-        <div class="sec-head"><h2>All Tracks</h2><button class="link" id="rfr">Shuffle ↻</button></div>
-        <div id="tlist" class="slist2"></div>
+      <div class="card-section">
+        <div class="card-section-head">
+          <h2>All tracks</h2>
+          <div class="genre-chips">
+            <button class="chip on" data-genre="all">All</button>
+            <button class="chip" data-genre="pop">Pop</button>
+            <button class="chip" data-genre="electronic">Electronic</button>
+            <button class="chip" data-genre="rock">Rock</button>
+            <button class="chip" data-genre="bollywood">Bollywood</button>
+            <button class="chip" data-genre="bengali">Bengali</button>
+            <button class="chip" data-genre="ambient">Ambient</button>
+            <button class="chip" data-genre="jazz">Jazz</button>
+          </div>
+          <button class="link-btn" id="home-shuffle-list">Shuffle ↻</button>
+        </div>
+        <div id="home-cards" class="card-grid"></div>
       </div>
 
-      <div class="sec" id="gsec">
-        <div class="sec-head"><h2>Browse Genres</h2></div>
-        <div class="ggrid">
-          <div class="gc c2" data-g="pop"><h3>Pop</h3><span class="ge">🎤</span></div>
-          <div class="gc c10" data-g="bollywood"><h3>Bollywood</h3><span class="ge">🎬</span></div>
-          <div class="gc c5" data-g="bengali"><h3>Bengali</h3><span class="ge">🪕</span></div>
-          <div class="gc c6" data-g="rock"><h3>Rock</h3><span class="ge">🎸</span></div>
-          <div class="gc c1" data-g="electronic"><h3>Electronic</h3><span class="ge">🎛️</span></div>
-          <div class="gc c5" data-g="ambient"><h3>Ambient</h3><span class="ge">🌿</span></div>
-          <div class="gc c4" data-g="hiphop"><h3>Hip-Hop</h3><span class="ge">🎧</span></div>
-          <div class="gc c8" data-g="jazz"><h3>Jazz</h3><span class="ge">🎺</span></div>
-          <div class="gc c3" data-g="classical"><h3>Classical</h3><span class="ge">🎻</span></div>
-          <div class="gc c7" data-g="folk"><h3>Folk</h3><span class="ge">🪕</span></div>
+      <div class="card-section" id="genre-section">
+        <div class="card-section-head"><h2>Browse genres</h2></div>
+        <div class="genre-grid">
+          <div class="genre-card c2"  data-genre="pop"><h3>Pop</h3><span class="ge">🎤</span></div>
+          <div class="genre-card c10" data-genre="bollywood"><h3>Bollywood</h3><span class="ge">🎬</span></div>
+          <div class="genre-card c5"  data-genre="bengali"><h3>Bengali</h3><span class="ge">🪕</span></div>
+          <div class="genre-card c6"  data-genre="rock"><h3>Rock</h3><span class="ge">🎸</span></div>
+          <div class="genre-card c1"  data-genre="electronic"><h3>Electronic</h3><span class="ge">🎛️</span></div>
+          <div class="genre-card c5"  data-genre="ambient"><h3>Ambient</h3><span class="ge">🌿</span></div>
+          <div class="genre-card c4"  data-genre="hiphop"><h3>Hip-Hop</h3><span class="ge">🎧</span></div>
+          <div class="genre-card c8"  data-genre="jazz"><h3>Jazz</h3><span class="ge">🎺</span></div>
+          <div class="genre-card c3"  data-genre="classical"><h3>Classical</h3><span class="ge">🎻</span></div>
+          <div class="genre-card c7"  data-genre="folk"><h3>Folk</h3><span class="ge">🪕</span></div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- List view (playlist / liked / genre) -->
+    <section id="view-list" class="hidden">
+      <div class="list-head">
+        <span class="list-tag" id="list-kind">Playlist</span>
+        <h1 id="list-title">Title</h1>
+        <p id="list-sub"></p>
+        <div class="list-actions">
+          <button class="btn-primary" id="list-play">▶ Play</button>
+          <button class="btn-ghost"   id="list-back">← Back</button>
+          <button class="btn-ghost hidden" id="list-rename">Rename</button>
+          <button class="btn-ghost hidden" id="list-delete">Delete</button>
+        </div>
+      </div>
+      <div id="list-cards" class="card-grid"></div>
+    </section>
+
+    <!-- Search view -->
+    <section id="view-search" class="hidden">
+      <div class="list-head">
+        <span class="list-tag">Search</span>
+        <h1 id="search-title">Results</h1>
+        <div class="list-actions">
+          <button class="btn-ghost" id="search-clear">✕ Clear</button>
+        </div>
+      </div>
+      <div id="search-cards" class="card-grid"></div>
+    </section>
   </main>
 
-  <!-- Now Playing Bar -->
-  <footer class="bar">
-    <div class="nt">
-      <div class="na c1" id="na" title="Click to set album art"><span class="na-emoji">🎵</span><span class="na-cam">📷</span></div>
-      <div class="ni">
-        <div class="ntitle" id="ntitle">No track selected</div>
-        <div class="nartist" id="nartist">Pick a song to start</div>
-      </div>
-      <button class="nheart" id="nheart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
-    </div>
-    <div class="nc">
-      <div class="cbs">
-        <button class="cb" id="shuf"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
-        <button class="cb" id="prevb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-        <button class="cplay" id="playb"><svg id="picon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></button>
-        <button class="cb" id="nextb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg></button>
-        <button class="cb" id="repb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
-      </div>
-      <div class="pb">
-        <span class="pt" id="tcur">0:00</span>
-        <div class="ptrack" id="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
-        <span class="pt" id="ttot">0:00</span>
-      </div>
-    </div>
-    <div class="ne">
-      <button class="vb" id="vbtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
-      <div class="vtrack" id="vt"><div class="vfill" id="vf" style="width:70%"></div></div>
-    </div>
-  </footer>
-
-  <!-- AI Assistant panel -->
+  <!-- AI Assistant slide-out -->
   <div class="ai-panel" id="ai-panel">
     <div class="ai-head">
-      <div class="dot">✦</div>
+      <div class="ai-dot">✦</div>
       <h3>AI Assistant</h3>
       <button id="ai-close">✕</button>
     </div>
@@ -196,11 +218,14 @@
       <button id="ai-send"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
     </div>
   </div>
+
+  <!-- Drawer / panel backdrop -->
+  <div class="backdrop" id="backdrop"></div>
 </div>
 
 <input type="file" id="art-input" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden"/>
 <div class="toast" id="toast"></div>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -1,8 +1,5 @@
-// ═══════════════════════════════════════════════════
-//  WEB AUDIO SYNTHESIZER
-//  Generates audio in the browser from a track's bpm / key /
-//  mood / genre. Nothing is downloaded or licensed.
-// ═══════════════════════════════════════════════════
+// Web Audio synthesiser. Generates audio in the browser from a track's
+// bpm/key/mood/genre. Used as a fallback when a track has no audio file.
 export class Synth {
   constructor() {
     this.ctx = null;
@@ -86,13 +83,13 @@ export class Synth {
       this.nodes.push(osc, g);
     }
 
-    // Melody — every 2 beats (skip for calm moods)
+    // Melody (skipped for calm moods)
     const melFreqs = [...this._chord(root, isMinor), root * 2];
     if (t.mood !== 'calm') {
       for (let beat = 0; beat < duration * bps; beat += 2) {
         const time = this.startTime + beat * beatLen;
         if (time < ctx.currentTime) continue;
-        const freq = melFreqs[Math.floor(beat/2) % melFreqs.length] * (t.genre === 'electronic' ? 2 : 1.5);
+        const freq = melFreqs[Math.floor(beat / 2) % melFreqs.length] * (t.genre === 'electronic' ? 2 : 1.5);
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
         osc.type = t.genre === 'rock' ? 'square' : 'sine';
@@ -106,13 +103,13 @@ export class Synth {
       }
     }
 
-    // Pad / atmosphere — long sustained chords
+    // Sustained pad chords
     const padFreqs = this._chord(root, isMinor);
     const padLen = beatLen * 8;
     for (let i = 0; i * padLen < duration; i++) {
       const time = this.startTime + i * padLen;
       if (time < ctx.currentTime) continue;
-      padFreqs.forEach(freq => {
+      padFreqs.forEach((freq) => {
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
         osc.type = 'sine';
@@ -127,18 +124,17 @@ export class Synth {
       });
     }
 
-    // Fade in master, restore volume
     this.gainNode.gain.linearRampToValueAtTime(this._vol, ctx.currentTime + 0.5);
 
     this._scheduleId = setInterval(() => {
       if (!this.isPlaying) return;
       const elapsed = ctx.currentTime - this.startTime;
       this.pauseOffset = elapsed;
-      if (this.ontime) this.ontime(elapsed, t.duration);
+      this.ontime?.(elapsed, t.duration);
       if (elapsed >= t.duration) {
         this.isPlaying = false;
         clearInterval(this._scheduleId);
-        if (this.onended) this.onended();
+        this.onended?.();
       }
     }, 200);
   }
@@ -165,7 +161,7 @@ export class Synth {
   _teardown() {
     this.isPlaying = false;
     clearInterval(this._scheduleId);
-    this.nodes.forEach(n => { try { n.stop?.(); n.disconnect?.(); } catch(e){} });
+    this.nodes.forEach((n) => { try { n.stop?.(); n.disconnect?.(); } catch {} });
     this.nodes = [];
     this.gainNode = null;
   }

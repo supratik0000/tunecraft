@@ -1,7 +1,9 @@
-// Seed the built-in catalog into the tracks table (idempotent).
-// Run with:  npm run seed   (also runs automatically on server start)
+// Idempotently insert the built-in catalog into the tracks table.
+// Runs on every server boot; user-added tracks (owner_id IS NOT NULL) are
+// left alone.
 import { pathToFileURL } from 'node:url';
-import { db, transaction } from './db.js';
+import { db, transaction } from './connection.js';
+import { applySchema } from './schema.js';
 import { CATALOG } from './catalog.js';
 
 export function seedCatalog() {
@@ -18,8 +20,8 @@ export function seedCatalog() {
   return CATALOG.length;
 }
 
-// Allow running directly: `node seed.js`
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  applySchema();
   const n = seedCatalog();
   console.log(`Seeded ${n} catalog tracks into the database.`);
 }

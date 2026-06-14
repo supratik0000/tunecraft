@@ -1,13 +1,12 @@
 // Downloads the royalty-free demo songs used by the player into
 // public/audio/. Run with:  npm run fetch-audio
-// These are SoundHelix example songs (algorithmically generated,
-// free to use) — there is nothing copyrighted to license.
+// These are SoundHelix example songs (algorithmically generated, free to use).
 import { mkdirSync, existsSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir = join(__dirname, '..', 'public', 'audio');
+const outDir = join(__dirname, '..', '..', 'public', 'audio');
 mkdirSync(outDir, { recursive: true });
 
 const COUNT = 8;

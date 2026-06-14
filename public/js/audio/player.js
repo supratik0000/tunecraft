@@ -1,9 +1,6 @@
-// ═══════════════════════════════════════════════════
-//  PLAYER — plays a real audio file when the track has one
-//  (track.audio), and falls back to the Web Audio synthesizer
-//  for tracks without a file. Exposes the same interface the
-//  app used before, so the rest of the code is unchanged.
-// ═══════════════════════════════════════════════════
+// Plays a real audio file when the track has one, falls back to the Web
+// Audio synthesiser otherwise. Exposes a uniform interface so the rest of
+// the app does not care which mode is active.
 import { Synth } from './synth.js';
 
 export class Player {
@@ -12,12 +9,11 @@ export class Player {
     this.audio.preload = 'auto';
     this.synth = new Synth();
     this.track = null;
-    this.mode = 'file';        // 'file' | 'synth'
+    this.mode = 'file';     // 'file' | 'synth'
     this._vol = 0.7;
     this.ontime = null;
     this.onended = null;
 
-    // Web Audio graph for the file player's visualizer
     this.ctx = null; this.analyser = null; this.srcNode = null;
 
     this.audio.addEventListener('timeupdate', () => {
@@ -25,9 +21,8 @@ export class Player {
     });
     this.audio.addEventListener('ended', () => { if (this.mode === 'file') this.onended?.(); });
 
-    // Mirror the synth's callbacks through the same handlers
-    this.synth.ontime = (cur, dur) => { if (this.mode === 'synth') this.ontime?.(cur, dur); };
-    this.synth.onended = () => { if (this.mode === 'synth') this.onended?.(); };
+    this.synth.ontime  = (cur, dur) => { if (this.mode === 'synth') this.ontime?.(cur, dur); };
+    this.synth.onended = ()         => { if (this.mode === 'synth') this.onended?.(); };
   }
 
   _initCtx() {
@@ -57,8 +52,8 @@ export class Player {
   play() {
     if (!this.track) return;
     if (this.mode === 'file') {
-      // Start playback first (guaranteed audio), then wire up the
-      // visualizer best-effort so a Web Audio hiccup can't mute the song.
+      // Start playback FIRST so a Web Audio hiccup can't silence the song,
+      // then wire up the visualiser best-effort.
       this.audio.volume = this._vol;
       const p = this.audio.play();
       if (p && p.catch) p.catch(() => {});
@@ -75,10 +70,7 @@ export class Player {
   }
 
   stop() {
-    try {
-      this.audio.pause();
-      this.audio.currentTime = 0;
-    } catch {}
+    try { this.audio.pause(); this.audio.currentTime = 0; } catch {}
     this.synth.stop();
   }
 
@@ -98,9 +90,9 @@ export class Player {
     this.synth.setVolume(v);
   }
 
-  get isPlaying() { return this.mode === 'file' ? !this.audio.paused && !this.audio.ended : this.synth.isPlaying; }
+  get isPlaying()   { return this.mode === 'file' ? !this.audio.paused && !this.audio.ended : this.synth.isPlaying; }
   get currentTime() { return this.mode === 'file' ? this.audio.currentTime : this.synth.currentTime; }
-  get duration() { return this.mode === 'file' ? (this.audio.duration || this.track?.duration || 0) : this.synth.duration; }
+  get duration()    { return this.mode === 'file' ? (this.audio.duration || this.track?.duration || 0) : this.synth.duration; }
 
   getWaveform() {
     if (this.mode === 'file') {
@@ -112,3 +104,6 @@ export class Player {
     return this.synth.getWaveform();
   }
 }
+
+// One shared instance used everywhere.
+export const player = new Player();

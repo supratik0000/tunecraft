@@ -1,5 +1,5 @@
 @echo off
-title Tunecraft Music Player
+title Tunecraft - Server
 cd /d "%~dp0server"
 
 echo ===============================================
@@ -17,15 +17,12 @@ if errorlevel 1 (
   exit /b 1
 )
 
-REM --- Install dependencies on first run ---
+REM --- Run install first if dependencies are missing ---
 if not exist "node_modules\" (
-  echo Installing dependencies, please wait... ^(first run only^)
-  call npm install
-  if errorlevel 1 (
-    echo [ERROR] Dependency install failed. See messages above.
-    pause
-    exit /b 1
-  )
+  echo Dependencies not installed. Running install...
+  echo.
+  call "%~dp0install.bat"
+  if errorlevel 1 exit /b 1
 )
 
 REM --- Create .env from the template if it does not exist ---
@@ -34,7 +31,6 @@ if not exist ".env" copy ".env.example" ".env" >nul
 REM --- Open the app in your browser once the server has booted ---
 start "" /b cmd /c "timeout /t 4 >nul && explorer http://localhost:4000"
 
-echo.
 echo Starting server at http://localhost:4000
 echo (Keep this window open. Press Ctrl+C or close it to stop.)
 echo.
