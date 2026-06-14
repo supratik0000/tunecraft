@@ -26,12 +26,22 @@ services:
       - key: JWT_SECRET
         generateValue: true
 
+      # ── Turso (persistent database) ──
+      # Paste these two from the Turso dashboard after creating a database.
+      # Without them, the server falls back to an ephemeral local SQLite
+      # file that gets wiped every redeploy.
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false
+
+      # ── AI assistant ──
       # Default AI provider. Change in the dashboard if you prefer another.
       - key: AI_PROVIDER
         value: groq
 
-      # AI key — `sync: false` means "do NOT commit a value to the blueprint;
-      # the operator must paste their own key in the Render dashboard."
-      # Without a key the AI panel just shows a friendly "not configured" notice.
+      # `sync: false` means "do NOT commit a value to the blueprint; the
+      # operator pastes their own key in the Render dashboard." Without a
+      # key the AI panel just shows a friendly "not configured" notice.
       - key: GROQ_API_KEY
         sync: false

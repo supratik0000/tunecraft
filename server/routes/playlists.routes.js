@@ -8,29 +8,29 @@ import {
 
 export const playlistsRouter = Router();
 
-playlistsRouter.use(authRequired); // every playlist route requires a session
+playlistsRouter.use(authRequired);
 
-playlistsRouter.get('/', handle((req, res) => {
-  res.json({ playlists: listPlaylists(req.user.id) });
+playlistsRouter.get('/', handle(async (req, res) => {
+  res.json({ playlists: await listPlaylists(req.user.id) });
 }));
 
-playlistsRouter.post('/', handle((req, res) => {
-  res.status(201).json({ playlist: createPlaylist(req.user.id, req.body?.name) });
+playlistsRouter.post('/', handle(async (req, res) => {
+  res.status(201).json({ playlist: await createPlaylist(req.user.id, req.body?.name) });
 }));
 
-playlistsRouter.patch('/:id', handle((req, res) => {
-  res.json({ playlist: renamePlaylist(req.user.id, +req.params.id, req.body?.name) });
+playlistsRouter.patch('/:id', handle(async (req, res) => {
+  res.json({ playlist: await renamePlaylist(req.user.id, +req.params.id, req.body?.name) });
 }));
 
-playlistsRouter.delete('/:id', handle((req, res) => {
-  deletePlaylist(req.user.id, +req.params.id);
+playlistsRouter.delete('/:id', handle(async (req, res) => {
+  await deletePlaylist(req.user.id, +req.params.id);
   res.json({ ok: true });
 }));
 
-playlistsRouter.post('/:id/tracks', handle((req, res) => {
-  res.json({ playlist: addTrackToPlaylist(req.user.id, +req.params.id, req.body?.trackId) });
+playlistsRouter.post('/:id/tracks', handle(async (req, res) => {
+  res.json({ playlist: await addTrackToPlaylist(req.user.id, +req.params.id, req.body?.trackId) });
 }));
 
-playlistsRouter.delete('/:id/tracks/:trackId', handle((req, res) => {
-  res.json({ playlist: removeTrackFromPlaylist(req.user.id, +req.params.id, req.params.trackId) });
+playlistsRouter.delete('/:id/tracks/:trackId', handle(async (req, res) => {
+  res.json({ playlist: await removeTrackFromPlaylist(req.user.id, +req.params.id, req.params.trackId) });
 }));

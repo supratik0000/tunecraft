@@ -1,6 +1,5 @@
-// Custom album-art upload. Accepts a base64 data URL in the request body,
-// writes the decoded bytes to data/uploads/<trackId>.<ext>, and stores the
-// public URL on the track.
+// Custom album-art upload. Accepts a base64 data URL, writes the bytes
+// to data/uploads/<trackId>.<ext>, and stores the URL on the track.
 import { Router } from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -18,8 +17,8 @@ const MAX_BYTES = 3 * 1024 * 1024;
 
 export const artRouter = Router();
 
-artRouter.post('/:id/art', authRequired, handle((req, res) => {
-  const track = getTrack(req.params.id);
+artRouter.post('/:id/art', authRequired, handle(async (req, res) => {
+  const track = await getTrack(req.params.id);
   if (!track) throw new Error('No such track');
 
   const dataUrl = String(req.body?.dataUrl || '');
@@ -33,5 +32,5 @@ artRouter.post('/:id/art', authRequired, handle((req, res) => {
 
   const filename = `${String(track.id).replace(/[^\w-]/g, '')}.${ext}`;
   writeFileSync(join(uploadsDir, filename), buffer);
-  res.json({ track: setTrackArt(track.id, `/uploads/${filename}`) });
+  res.json({ track: await setTrackArt(track.id, `/uploads/${filename}`) });
 }));

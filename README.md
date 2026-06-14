@@ -224,9 +224,38 @@ copy at `https://<your-name>.onrender.com` at no cost:
 **Free-tier caveats:**
 - The service sleeps after 15 min of inactivity. First request after a
   sleep takes ~30s while it wakes.
-- The filesystem is ephemeral — accounts and playlists reset on each
-  redeploy. The built-in catalog re-seeds automatically. For persistent
-  user data, attach a Render disk ($1/mo) or move to Postgres.
+- Tunecraft uses **Turso** (free SQLite-as-a-service) for the database
+  in production, so accounts and playlists persist across redeploys. See
+  the next section to set it up.
+
+---
+
+## Database: Turso (free, persistent)
+
+Tunecraft talks to Turso (managed libSQL/SQLite) in production so user
+data survives redeploys and the free-tier ephemeral filesystem. Locally
+the server falls back to a regular SQLite file at `server/data/app.db`,
+so you don't need a Turso account for development.
+
+**Set up Turso in 3 minutes:**
+
+1. Sign up at <https://turso.tech> (GitHub login is fastest, free tier
+   covers 9 GB / 1 B reads / 25 M writes per month — far more than this
+   app will ever use).
+2. Open the dashboard → **Create Database** → name it `tunecraft` →
+   pick a region near you → **Create**.
+3. On the new database's page, copy the **Database URL** (looks like
+   `libsql://tunecraft-yourname.turso.io`) and create a token (top-right
+   **Generate Token**, name `tunecraft-prod`, copy the JWT it shows).
+4. In your Render dashboard → tunecraft service → **Environment**, paste:
+   - `TURSO_DATABASE_URL` = the libsql:// URL
+   - `TURSO_AUTH_TOKEN`   = the JWT token
+5. Render redeploys automatically. From that point on, every account or
+   playlist is stored in Turso and survives forever.
+
+If you ever leave both env vars blank, the server falls back to the
+ephemeral local file — useful for testing on Render, useless for
+persistence.
 
 ---
 

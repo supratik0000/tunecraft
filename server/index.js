@@ -24,8 +24,8 @@ import { aiStatus }         from './ai/providers.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-applySchema();
-const seeded = seedCatalog();
+await applySchema();
+const seeded = await seedCatalog();
 
 const app = express();
 app.use(cors());

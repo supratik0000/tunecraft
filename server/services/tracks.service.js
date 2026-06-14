@@ -1,31 +1,31 @@
 // All track-level data operations. Used by both the REST routes and the
 // AI agent, so they share identical behaviour.
-import { db } from '../db/connection.js';
+import { getOne, getAll, run, db } from '../db/connection.js';
 import { GENRES, COLORS, MOODS, KEYS, AUDIO, pick } from './meta.js';
 
 export function listTracks() {
-  return db.prepare(
+  return getAll(
     'SELECT * FROM tracks ORDER BY owner_id IS NOT NULL, CAST(id AS INTEGER), id'
-  ).all();
+  );
 }
 
 export function getTrack(id) {
-  return db.prepare('SELECT * FROM tracks WHERE id = ?').get(String(id));
+  return getOne('SELECT * FROM tracks WHERE id = ?', [String(id)]);
 }
 
 export function findTrackByName(name) {
-  return db.prepare('SELECT * FROM tracks WHERE lower(name) = lower(?) LIMIT 1')
-    .get(String(name).trim());
+  return getOne('SELECT * FROM tracks WHERE lower(name) = lower(?) LIMIT 1', [String(name).trim()]);
 }
 
-export function addTrack(input, ownerId = null) {
+export async function addTrack(input, ownerId = null) {
   const name = String(input.name || '').trim();
   if (!name) throw new Error('A track needs a name');
   const artist = String(input.artist || '').trim() || 'Unknown Artist';
   const album  = String(input.album  || '').trim() || 'Singles';
   const genre  = GENRES.includes(input.genre) ? input.genre : pick(GENRES, name);
-  const id = 'u' + db.prepare('SELECT COALESCE(MAX(rowid),0)+1 AS n FROM tracks').get().n
-                + '-' + Date.now().toString(36);
+
+  const rowMax = await getOne('SELECT COALESCE(MAX(rowid),0)+1 AS n FROM tracks');
+  const id = 'u' + Number(rowMax?.n || 1) + '-' + Date.now().toString(36);
 
   const track = {
     id,
@@ -44,16 +44,18 @@ export function addTrack(input, ownerId = null) {
     owner_id:  ownerId,
   };
 
-  db.prepare(`INSERT INTO tracks
-    (id,name,artist,album,genre,emoji,color,bpm,music_key,mood,duration,art,audio,owner_id)
-    VALUES
-    (@id,@name,@artist,@album,@genre,@emoji,@color,@bpm,@music_key,@mood,@duration,@art,@audio,@owner_id)`)
-    .run(track);
+  await db.execute({
+    sql: `INSERT INTO tracks
+      (id,name,artist,album,genre,emoji,color,bpm,music_key,mood,duration,art,audio,owner_id)
+      VALUES
+      (:id,:name,:artist,:album,:genre,:emoji,:color,:bpm,:music_key,:mood,:duration,:art,:audio,:owner_id)`,
+    args: track,
+  });
   return track;
 }
 
-export function setTrackArt(trackId, artPath) {
-  const r = db.prepare('UPDATE tracks SET art = ? WHERE id = ?').run(artPath, String(trackId));
-  if (r.changes === 0) throw new Error('No such track');
+export async function setTrackArt(trackId, artPath) {
+  const r = await run('UPDATE tracks SET art = ? WHERE id = ?', [artPath, String(trackId)]);
+  if (r.rowsAffected === 0) throw new Error('No such track');
   return getTrack(trackId);
 }

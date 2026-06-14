@@ -1,9 +1,9 @@
 // Schema definition + lightweight in-place migrations.
 // Runs once on server boot from index.js.
-import { db } from './connection.js';
+import { db, getAll } from './connection.js';
 
-export function applySchema() {
-  db.exec(`
+export async function applySchema() {
+  await db.executeMultiple(`
     CREATE TABLE IF NOT EXISTS users (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
       email         TEXT    UNIQUE NOT NULL,
@@ -56,13 +56,13 @@ export function applySchema() {
     );
   `);
 
-  ensureColumn('tracks', 'art',   'TEXT');
-  ensureColumn('tracks', 'audio', 'TEXT');
+  await ensureColumn('tracks', 'art',   'TEXT');
+  await ensureColumn('tracks', 'audio', 'TEXT');
 }
 
-function ensureColumn(table, column, definition) {
-  const cols = db.prepare(`PRAGMA table_info(${table})`).all();
+async function ensureColumn(table, column, definition) {
+  const cols = await getAll(`PRAGMA table_info(${table})`);
   if (!cols.some((c) => c.name === column)) {
-    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+    await db.execute(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
   }
 }

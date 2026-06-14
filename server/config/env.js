@@ -7,6 +7,13 @@ export const PORT = Number(process.env.PORT) || 4000;
 export const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-secret-change-me';
 export const TOKEN_TTL = '30d';
 
+// Turso (libSQL) database. Leave both unset to use a local SQLite file
+// at server/data/app.db instead.
+export const TURSO = {
+  url:   process.env.TURSO_DATABASE_URL || '',
+  token: process.env.TURSO_AUTH_TOKEN   || '',
+};
+
 export const AI = {
   provider: (process.env.AI_PROVIDER || 'groq').toLowerCase(),
   model:    process.env.AI_MODEL    || '',

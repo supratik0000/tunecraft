@@ -5,12 +5,12 @@ import { listLikes, setLike } from '../services/likes.service.js';
 
 export const likesRouter = Router();
 
-likesRouter.get('/', authRequired, handle((req, res) => {
-  res.json({ likes: listLikes(req.user.id) });
+likesRouter.get('/', authRequired, handle(async (req, res) => {
+  res.json({ likes: await listLikes(req.user.id) });
 }));
 
-likesRouter.put('/:trackId', authRequired, handle((req, res) => {
+likesRouter.put('/:trackId', authRequired, handle(async (req, res) => {
   const liked = req.body?.liked !== false;
-  setLike(req.user.id, req.params.trackId, liked);
+  await setLike(req.user.id, req.params.trackId, liked);
   res.json({ trackId: req.params.trackId, liked });
 }));

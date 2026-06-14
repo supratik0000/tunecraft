@@ -29,7 +29,7 @@ export async function runOpenAI(cfg, userId, history, userMessage) {
     for (const tc of msg.tool_calls) {
       let args = {};
       try { args = JSON.parse(tc.function.arguments || '{}'); } catch {}
-      const result = runTool(userId, tc.function.name, args);
+      const result = await runTool(userId, tc.function.name, args);
       if (MUTATING.has(tc.function.name) && !result.error) changed = true;
       messages.push({ role: 'tool', tool_call_id: tc.id, content: JSON.stringify(result) });
     }

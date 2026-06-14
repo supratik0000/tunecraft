@@ -28,7 +28,7 @@ export async function runAnthropic(cfg, userId, history, userMessage) {
     const results = [];
     for (const block of response.content) {
       if (block.type !== 'tool_use') continue;
-      const result = runTool(userId, block.name, block.input);
+      const result = await runTool(userId, block.name, block.input);
       if (MUTATING.has(block.name) && !result.error) changed = true;
       results.push({ type: 'tool_result', tool_use_id: block.id, content: JSON.stringify(result) });
     }
