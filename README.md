@@ -1,6 +1,6 @@
 # Tunecraft
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR_USERNAME/tunecraft)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/supratik0000/tunecraft)
 
 A self-contained music player you run on your own machine — or deploy free
 to the public web with one click. Includes user accounts, playlists, liked
