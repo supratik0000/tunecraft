@@ -61,6 +61,7 @@
       <button class="bb-tab on" data-nav="home">Home</button>
       <button class="bb-tab"     data-nav="browse">Browse</button>
       <button class="bb-tab"     data-nav="ai">Assistant</button>
+      <button class="bb-tab"     data-nav="credits">Credits</button>
     </nav>
     <div class="bb-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -197,6 +198,41 @@
         </div>
       </div>
       <div id="search-cards" class="card-grid"></div>
+    </section>
+
+    <!-- Credits view -->
+    <section id="view-credits" class="hidden">
+      <div class="list-head">
+        <span class="list-tag">Credits</span>
+        <h1>Where the music comes from</h1>
+        <p>Tunecraft is built to be self-hostable and legally safe to share — nothing in it is licensed from a third-party catalogue.</p>
+      </div>
+      <div class="credits-body">
+        <section class="credits-card">
+          <h2>Audio</h2>
+          <p>All real-audio tracks in Tunecraft are <strong>SoundHelix demo songs</strong> — algorithmically generated MP3s that the SoundHelix project explicitly publishes for free use. Tracks without an audio file fall back to the in-browser Web Audio synthesizer included in this app.</p>
+          <p>Source: <a href="https://www.soundhelix.com/audio-examples" target="_blank" rel="noopener">soundhelix.com</a></p>
+        </section>
+
+        <section class="credits-card">
+          <h2>Track metadata</h2>
+          <p>Every track title, artist name, album name, and emoji in the catalogue is <strong>original to this app</strong>. None of them refers to a real commercial release. The Hindi and Bengali entries use romanised originals, not the titles of any existing songs.</p>
+        </section>
+
+        <section class="credits-card">
+          <h2>Code & design</h2>
+          <p>Tunecraft was built as a self-contained, original music-player project — see the README for the open-source MIT license, full source layout, and deployment instructions.</p>
+        </section>
+
+        <section class="credits-card">
+          <h2>Use your own music</h2>
+          <p>To swap any track for your own MP3: drop the file into <code>public/audio/</code>, then change the <code>audio:</code> path on that track in <code>server/db/catalog.js</code>. The next deploy picks it up.</p>
+        </section>
+
+        <div class="list-actions" style="margin-top:24px">
+          <button class="btn-ghost" id="credits-back">← Back to home</button>
+        </div>
+      </div>
     </section>
   </main>
 

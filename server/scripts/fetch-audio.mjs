@@ -9,7 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = join(__dirname, '..', '..', 'public', 'audio');
 mkdirSync(outDir, { recursive: true });
 
-const COUNT = 8;
+const COUNT = 17;
 const url = (i) => `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${i}.mp3`;
 
 let downloaded = 0, skipped = 0;

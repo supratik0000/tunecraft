@@ -168,6 +168,26 @@
 .list-head p{color:var(--dim);font-size:14px;margin-bottom:18px}
 .list-actions{display:flex;gap:10px;flex-wrap:wrap}
 
+/* Credits view */
+.credits-body{padding:0 32px 60px;display:flex;flex-direction:column;gap:14px;max-width:760px}
+.credits-card{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:20px 22px;
+}
+.credits-card h2{
+  font-size:16px;font-weight:700;letter-spacing:-.01em;
+  margin-bottom:10px;color:var(--brand);
+}
+.credits-card p{color:var(--dim);font-size:14px;line-height:1.6;margin-bottom:8px}
+.credits-card p:last-child{margin-bottom:0}
+.credits-card a{color:var(--brand);text-decoration:underline}
+.credits-card code{
+  background:var(--surface-3);padding:1px 6px;border-radius:4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;
+}
+
 /* Narrow viewports — collapse paddings */
 @media (max-width:720px){
   .bb-nav{display:none}

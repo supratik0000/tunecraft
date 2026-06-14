@@ -6,8 +6,15 @@ import { renderTracks } from './tracks-render.js';
 import { playQueue } from './playback.js';
 import { renamePlaylist, deletePlaylist, renderLibrary } from './library-drawer.js';
 
-const VIEWS = ['view-home', 'view-list', 'view-search'];
+const VIEWS = ['view-home', 'view-list', 'view-search', 'view-credits'];
 function showOnly(id) { VIEWS.forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+
+export function openCredits() {
+  state.view = { type: 'credits' };
+  showOnly('view-credits');
+  setNavTab('credits');
+  $('content').scrollTo({ top: 0 });
+}
 
 function setNavTab(name) {
   $$('.bb-tab').forEach((t) => t.classList.toggle('on', t.dataset.nav === name));
@@ -117,9 +124,10 @@ export function initViews() {
   $$('.bb-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.nav;
-      if (target === 'home')   { $('search-input').value = ''; renderHome(); }
-      if (target === 'browse') { renderHome(); document.getElementById('genre-section')?.scrollIntoView({ behavior: 'smooth' }); }
-      if (target === 'ai')     { /* handled in ai-panel.js */ }
+      if (target === 'home')    { $('search-input').value = ''; renderHome(); }
+      if (target === 'browse')  { renderHome(); document.getElementById('genre-section')?.scrollIntoView({ behavior: 'smooth' }); }
+      if (target === 'ai')      { /* handled in ai-panel.js */ }
+      if (target === 'credits') { openCredits(); }
       setNavTab(target);
     });
   });
@@ -160,6 +168,7 @@ export function initViews() {
   // Back / clear buttons
   $('list-back').addEventListener('click', renderHome);
   $('search-clear').addEventListener('click', () => { $('search-input').value = ''; renderHome(); });
+  $('credits-back').addEventListener('click', renderHome);
 
   // Top-bar search input
   $('search-input').addEventListener('input', (e) => {
