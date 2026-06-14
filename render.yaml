@@ -1,0 +1,37 @@
+# Render.com one-click deploy spec.
+# Anyone forking this repo can hit the "Deploy to Render" button in the
+# README and Render will use this file to provision the service.
+#
+# Free tier notes:
+#   * The service sleeps after 15 min of inactivity. First request after
+#     a sleep wakes it (~30s cold start).
+#   * The filesystem is ephemeral — server/data/app.db is recreated on
+#     every deploy. The built-in catalog re-seeds automatically; user
+#     accounts and playlists reset between restarts.
+#   * 750 free hours / month — enough for one always-deployed service.
+
+services:
+  - type: web
+    name: tunecraft
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run fetch-audio
+    startCommand: npm start
+    # Render reads server/package.json#engines.node automatically.
+
+    envVars:
+      # JWT signing secret — Render generates a long random value once
+      # at first deploy and keeps it stable.
+      - key: JWT_SECRET
+        generateValue: true
+
+      # Default AI provider. Change in the dashboard if you prefer another.
+      - key: AI_PROVIDER
+        value: groq
+
+      # AI key — `sync: false` means "do NOT commit a value to the blueprint;
+      # the operator must paste their own key in the Render dashboard."
+      # Without a key the AI panel just shows a friendly "not configured" notice.
+      - key: GROQ_API_KEY
+        sync: false

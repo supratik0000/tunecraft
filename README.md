@@ -1,8 +1,11 @@
 # Tunecraft
 
-A self-contained music player you run on your own machine. Includes user
-accounts, playlists, liked songs, an in-browser audio synthesizer, and an
-AI assistant that controls your library in plain English.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR_USERNAME/tunecraft)
+
+A self-contained music player you run on your own machine — or deploy free
+to the public web with one click. Includes user accounts, playlists, liked
+songs, an in-browser audio synthesizer, and an AI assistant that controls
+your library in plain English.
 
 Nothing is streamed or licensed: real audio comes from a small bundle of
 royalty-free instrumental MP3s (algorithmically-generated SoundHelix demo
@@ -201,6 +204,29 @@ maps to the same per-user service function.
 | `POST /api/agent/chat`                    | ✓    | Talk to the AI `{ message, history }` |
 
 Authenticated requests send `Authorization: Bearer <token>`.
+
+---
+
+## Hosting it free on Render
+
+The repo includes a [`render.yaml`](render.yaml) blueprint. To host a public
+copy at `https://<your-name>.onrender.com` at no cost:
+
+1. Push this repo to your own GitHub account.
+2. Update the `Deploy to Render` badge URL at the top of this README so it
+   points at your fork.
+3. Click the badge. Sign in to Render with GitHub, pick the repo, and let
+   Render apply the blueprint. The first deploy takes ~3 min (it downloads
+   the demo MP3s during build).
+4. In the Render dashboard, open the new service → **Environment** → paste
+   your free Groq key as `GROQ_API_KEY` if you want the AI assistant.
+
+**Free-tier caveats:**
+- The service sleeps after 15 min of inactivity. First request after a
+  sleep takes ~30s while it wakes.
+- The filesystem is ephemeral — accounts and playlists reset on each
+  redeploy. The built-in catalog re-seeds automatically. For persistent
+  user data, attach a Render disk ($1/mo) or move to Postgres.
 
 ---
 
