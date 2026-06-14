@@ -4,19 +4,25 @@ import { db } from '../db/connection.js';
 import { hashPassword, verifyPassword } from './passwords.js';
 import { signToken, publicUser } from './tokens.js';
 import { authRequired } from './middleware.js';
+import { emailFormatOk, domainHasMail } from './email-check.js';
 
 export const authRouter = Router();
 
-const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const MIN_PASSWORD = 6;
 
-authRouter.post('/register', (req, res) => {
+authRouter.post('/register', async (req, res) => {
   const email = String(req.body?.email || '').trim().toLowerCase();
   const password = String(req.body?.password || '');
   const displayName = String(req.body?.displayName || '').trim() || email.split('@')[0];
 
-  if (!EMAIL_RE.test(email))        return res.status(400).json({ error: 'Enter a valid email address' });
+  if (!emailFormatOk(email))         return res.status(400).json({ error: 'Enter a valid email address' });
   if (password.length < MIN_PASSWORD) return res.status(400).json({ error: `Password must be at least ${MIN_PASSWORD} characters` });
+
+  // Verify the email's domain actually accepts mail — catches typos like
+  // "you@gmial.con" and outright fake "test@asdf.qqq" addresses.
+  if (!(await domainHasMail(email))) {
+    return res.status(400).json({ error: `That email domain doesn't seem to exist. Check for typos.` });
+  }
 
   const exists = db.prepare('SELECT 1 FROM users WHERE email = ?').get(email);
   if (exists) return res.status(409).json({ error: 'An account with that email already exists' });

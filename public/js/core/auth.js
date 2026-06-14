@@ -27,8 +27,50 @@ export function setAuthMode(mode) {
   $('auth-err').textContent = '';
 }
 
+// Typical email-domain typos → the canonical version we suggest.
+const COMMON_TYPOS = {
+  'gmail.con': 'gmail.com', 'gmail.co': 'gmail.com', 'gnail.com': 'gmail.com',
+  'gmai.com': 'gmail.com', 'gmial.com': 'gmail.com', 'gmail.cm': 'gmail.com',
+  'yahoo.con': 'yahoo.com', 'yaho.com': 'yahoo.com', 'yahooo.com': 'yahoo.com',
+  'hotmial.com': 'hotmail.com', 'hotmail.con': 'hotmail.com',
+  'outlok.com': 'outlook.com', 'outlook.con': 'outlook.com',
+  'icould.com': 'icloud.com', 'iclud.com': 'icloud.com',
+};
+
+function suggestEmailFix(email) {
+  const at = email.indexOf('@');
+  if (at < 1) return null;
+  const domain = email.slice(at + 1).toLowerCase();
+  const fixed = COMMON_TYPOS[domain];
+  return fixed ? email.slice(0, at + 1) + fixed : null;
+}
+
 export function initAuth() {
   setAuthMode('login');
+
+  // ── Password-visibility eye toggle ─────────────────────
+  $('af-pass-eye').addEventListener('click', () => {
+    const input = $('af-pass');
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    $('eye-open').classList.toggle('hidden', !showing);
+    $('eye-closed').classList.toggle('hidden', showing);
+    $('af-pass-eye').setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+  });
+
+  // ── Live email feedback (typo suggestion) ──────────────
+  $('af-email').addEventListener('input', () => {
+    const email = $('af-email').value.trim();
+    const hint = $('af-email-hint');
+    if (!email || !email.includes('@')) { hint.innerHTML = ''; return; }
+    const fix = suggestEmailFix(email);
+    if (fix) {
+      hint.innerHTML = `Did you mean <a id="email-fix">${fix}</a>?`;
+      $('email-fix').onclick = () => { $('af-email').value = fix; hint.innerHTML = ''; };
+    } else {
+      hint.innerHTML = '';
+    }
+  });
 
   $('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();

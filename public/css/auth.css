@@ -32,6 +32,25 @@
   font-size:14px;outline:none;transition:.15s;
 }
 .auth input:focus{border-color:var(--brand)}
+
+/* Password field with embedded eye toggle */
+.pwd-wrap{position:relative}
+.pwd-wrap input{padding-right:44px}
+.pwd-eye{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:8px;
+  background:transparent;border:none;color:var(--faint);
+  display:flex;align-items:center;justify-content:center;
+  transition:.15s;
+}
+.pwd-eye:hover{color:var(--brand);background:var(--surface)}
+.pwd-eye svg{width:18px;height:18px}
+
+/* Live email-feedback hint (typo suggestion) */
+.email-hint{
+  margin-top:6px;font-size:12px;color:var(--dim);min-height:14px;
+}
+.email-hint a{color:var(--brand);cursor:pointer;font-weight:600}
 .auth .btn{
   width:100%;margin-top:22px;padding:12px;border-radius:10px;
   background:var(--brand);border:none;color:#fff;
